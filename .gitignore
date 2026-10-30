@@ -5,3 +5,22 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 .gemini/
+
+# Local credentials and environment configuration
+**/wifi_secrets.h
+/arduino-cli.yaml
+.env
+.env.*
+!.env.example
+
+# Downloaded tools, generated firmware and dependency caches
+/tools/
+/build/
+/reference/
+node_modules/
+/web/dist/
+*.bin
+*.elf
+*.map
+*.o
+*.d

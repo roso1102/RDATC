@@ -1,3 +1,31 @@
+# ARES — current interactive demonstration
+
+**Aerial Reconnaissance Emergency Support System:** one ESP32-S3 node with an OV7670 camera, MLX90614 IR thermometer and LD2410-family radar, connected over local Wi-Fi to a laptop ground station.
+
+Start with [TEAM_HANDOFF.md](TEAM_HANDOFF.md) for the original vision, decision history, component roles and verified implementation status. Follow [ACTION_PLAN.md](ACTION_PLAN.md) for the ordered phases, validation gates, evidence requirements and fallback decisions.
+
+## Current status
+
+- USB identification confirmed an ESP32-S3 with 8 MB flash and 8 MB embedded PSRAM. The camera working sketch compiles with the recorded settings.
+- Live camera/sensor acquisition, person detection, fusion calibration, the React/FastAPI application and the 3D scene remain to be implemented or validated. A successful compile is not a completed demo.
+- The imminent camera setup is frontal and interactive; overhead aerial validation is deferred. LoRa, GPS, Raspberry Pi and multiple nodes are outside this demo.
+- Operator-selected condition profiles are planned. Numerical weights require labelled development/validation trials and separate held-out evaluation.
+- The MLX90614 initially provides thermal context; it is not a spatial thermal camera. Optional RSSI/CSI sensing and pose-driven avatar animation follow the core live pipeline.
+
+## Working firmware and setup
+
+Use [firmware/ares_node/ares_node.ino](firmware/ares_node/ares_node.ino). Copy [wifi_secrets.example.h](firmware/ares_node/wifi_secrets.example.h) to `wifi_secrets.h` in that folder and edit the copy locally. Populated credentials, local CLI configuration, tool downloads and build outputs are ignored.
+
+See [CLI setup](docs/setup/arduino-cli.md), [identified board settings](docs/hardware/board-config.md) and [camera compile validation](docs/validation/camera-build-2026-10-31.md). The [supplied circuit image](docs/hardware/wiring-2026-10-31.png) is a historical reference that includes excluded LoRa hardware; actual IR/radar pin and power connections still need verification.
+
+The remaining design documents are [PLAN.md](PLAN.md) and [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md). Planned models, performance targets and illustrative 3D views must not be presented as measured execution, accuracy or reconstructed geometry.
+
+## Historical simulation material
+
+The existing `app.py`, `files/`, `output_figures/` and `ARES_Firmware/` material is retained as prior work. The simulation description below uses earlier component assumptions and synthetic results; it does not establish the current hardware's detection accuracy or deployment performance. Its old Streamlit viewer is not the planned React interface.
+
+---
+
 # Design of a Rapidly Deployable All-Terrain Communication and Human-Presence Detection System for Disaster Response
 ## Simulation & Testing Suite
 
