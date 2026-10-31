@@ -1,0 +1,9 @@
+{
+ "image_bytes": 1405299,
+ "app_partition_bytes": 3342336,
+ "model": 300568,
+ "tflm_esp_nn_code": 68531,
+ "ares_app_code": 105563,
+ "camera_driver": 67413,
+ "idf_arduino_wifi_rest": 863224
+}

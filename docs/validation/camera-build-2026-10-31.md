@@ -43,7 +43,12 @@ The portable launcher returned Arduino CLI 1.5.1 both with the existing local co
 
 ## Remaining gates
 
+Later physical probe results and the compiled project-local STOP/START fix are
+recorded in [SCCB validation](camera-sccb-2026-10-31.md). PSRAM is now detected
+at runtime and the camera ID is readable with the working transaction method;
+post-fix full capture and Wi-Fi remain pending.
+
 - No application firmware was uploaded during these checks. Esptool temporarily ran a RAM stub for identification and reset the board.
 - Runtime PSRAM initialisation/usable capacity and actual OV7670 frames remain untested here.
-- Wi-Fi operation, IR/radar GPIOs/acquisition and power wiring remain to be verified.
+- Wi-Fi operation and camera wiring/power remain to be verified. Latest scope excludes physical IR acquisition (nonworking, laptop simulation) and ESP32 radar wiring. Subsequent direct radar BLE validation is recorded separately in [backend validation](backend-2026-10-31.md).
 - Full phase 0 is still IN PROGRESS, and phase 1 live acquisition is not passed.

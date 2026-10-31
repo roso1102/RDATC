@@ -41,6 +41,6 @@ Compile-only command from the project root, after [tool and local-credential set
 .\arduino-cli.cmd compile --fqbn 'esp32:esp32:esp32s3:FlashSize=8M,PSRAM=opi,CDCOnBoot=cdc,USBMode=hwcdc,PartitionScheme=default_8MB' --build-path '.\build\camera-baseline' --jobs 4 --warnings default '.\firmware\ares_node'
 ```
 
-Compile compatibility does not establish camera wiring, PSRAM runtime operation, Wi-Fi connectivity or valid images. IR/radar GPIOs and supply wiring remain to be verified.
+Compile compatibility does not establish camera wiring, PSRAM runtime operation, Wi-Fi connectivity or valid images. Latest scope: physical IR is nonworking and simulated on the laptop; radar uses its own separate app/web system, not ESP32 GPIOs.
 
 The camera working sketch compiled successfully with these options, including a follow-up build after zero-initialising its camera configuration. See [camera build validation](../validation/camera-build-2026-10-31.md).

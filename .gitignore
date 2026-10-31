@@ -19,6 +19,8 @@ __pycache__/
 /reference/
 node_modules/
 /web/dist/
+.pytest_cache/
+/benchmarks/sessions/
 *.bin
 *.elf
 *.map

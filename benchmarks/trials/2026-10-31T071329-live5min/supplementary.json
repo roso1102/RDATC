@@ -1,0 +1,47 @@
+{
+ "object_after13s_esp32": [
+  0,
+  20
+ ],
+ "object_after13s_laptop": [
+  0,
+  20
+ ],
+ "clear_during_outage": {
+  "n": 49,
+  "recall": 0.98
+ },
+ "clear_outside_outage": {
+  "n": 448,
+  "precision": 0.963,
+  "recall": 0.773,
+  "f1": 0.858,
+  "false_alert_rate": 0.06
+ },
+ "camera_only_during_outage": {
+  "n": 49,
+  "recall": 0.0
+ },
+ "camera_only_outside_outage": {
+  "n": 448,
+  "precision": 0.962,
+  "recall": 0.763,
+  "f1": 0.851,
+  "false_alert_rate": 0.06
+ },
+ "radar_only_during_outage": {
+  "n": 49,
+  "recall": 1.0
+ },
+ "radar_only_outside_outage": {
+  "n": 448,
+  "precision": 0.667,
+  "recall": 1.0,
+  "f1": 0.8,
+  "false_alert_rate": 1.0
+ },
+ "outage_segments": [
+  "far",
+  "side"
+ ]
+}

@@ -2,284 +2,290 @@
 
 Updated: 31 October 2026, Asia/Calcutta.
 
-**Purpose:** deliver an interactive frontal-view demonstration with real camera frames, actual sensor readings, explainable profile-based fusion, and an illustrative 3D view. Validate each phase before relying on it in the next.
+**Current scope:** real ESP32 camera, laptop-generated synthetic IR, and a separate radar app/web system. Radar is not wired to the ESP32. Automatic radar integration depends on identifying a supported data feed.
 
-**Status:** initial tooling and hardware identification have started; no complete phase gate is passed yet. Arduino CLI 1.5.1 runs, and an esptool query on COM3 confirmed ESP32-S3 with 8 MB flash and 8 MB embedded PSRAM. Camera/sensor runtime operation, the application and model execution remain unverified here. See [docs/hardware/board-config.md](docs/hardware/board-config.md) for the selected build configuration.
+**Verified:** board/compile checks, 15 backend/protocol tests, React production build, direct radar BLE authentication and real reports, and a browser-operated source-labelled recording. Camera runtime, person detection, calibration, spatial alignment and the complete end-to-end phase gates remain pending. See [backend validation](docs/validation/backend-2026-10-31.md).
 
-Phase 0 build check: camera working sketch compiled successfully, including the camera-configuration initialisation fix. Evidence: [camera build validation](docs/validation/camera-build-2026-10-31.md). Remaining phase 0 requirements include actual IR/radar pin/power verification and the complete reproducible setup record.
+Read [PLAN.md](PLAN.md), [TEAM_HANDOFF.md](TEAM_HANDOFF.md) and [the source contract](docs/synthetic-ir-demo.md).
 
-## Scope and priorities
+## Source rules
 
-- Hardware: one ESP32-S3, OV7670, MLX90614 and LD2410; laptop ground station.
-- Communication: local Wi-Fi for images/data; USB for programming and debugging. No LoRa, GPS or Raspberry Pi in this demo.
-- Software: Python FastAPI backend and React + TypeScript + Vite frontend. Three.js for the illustrative scene; no Streamlit.
-- Operator selects the condition. The system does not infer or silently switch disaster profiles.
-- Camera supplies visual person evidence; radar supplies zone-presence evidence; IR initially supplies thermal context. IR human-presence weight starts at zero until experiments justify a contribution.
-- ESP32 inference and fusion are the target. A deadline fallback may run inference/fusion on the laptop, with explicit execution labels and onboard work marked pending.
-- Must-have: real acquisition, frontal person detection, live evidence, profile switching, experimental weight methodology, stale/fault states and a rehearsed demonstration.
-- Presentation milestone: generic avatar and overhead/perspective toggle. Pose-driven animation is optional after the core pipeline works.
-- Optional research: RSSI trace and CSI sensing. Neither blocks the core demo or starts with an assumed human-presence weight.
-- Deferred: validated overhead detection, aerial mapping, reconstructed wreckage, safe-route claims, multi-node networking and disaster-field validation.
+- Camera frames are real or unavailable; no synthetic placeholder silently replaces a failed feed.
+- IR hardware is nonworking. Generate IR on the laptop and retain SYNTHETIC/source/version/scenario labels everywhere.
+- IR weight is zero in live person assessment. Synthetic IR is excluded from physical sensor/fusion accuracy and weight fitting.
+- Radar is EXTERNAL / NOT INTEGRATED until the documented BLE stream is verified on the physical unit. Use direct laptop BLE; no ESP32 UART/GPIO driver or invented radar readings.
+- A radar app open beside the dashboard does not establish automatic fusion. Until integration works, person assessment is CAMERA ONLY.
+- Operator condition/profile and synthetic temperature scenario are independent controls.
+- Laptop inference/fusion and illustrative 3D content carry truthful labels. Onboard inference is a separate future measured gate.
 
-## Phase order and tracking
+## Tracking
 
-Use `NOT STARTED`, `IN PROGRESS`, `PASS`, `PARTIAL` or `BLOCKED`. A fallback does not turn the original gate into a pass; record the reduced scope separately.
+Use NOT STARTED, IN PROGRESS, PASS, PARTIAL or BLOCKED. A reduced demo does not pass an absent physical-sensor/automatic-fusion gate.
 
-| Phase | Deliverable | Initial status |
+| Phase | Deliverable | Status |
 |---|---|---|
-| 0 | Verified hardware and reproducible starting sketch | IN PROGRESS |
-| 1 | Real camera, IR and radar acquisition | NOT STARTED |
-| 2 | Laptop ingestion, recording and minimum live viewer | NOT STARTED |
-| 3 | Frontal person detector and execution decision | NOT STARTED |
-| 4 | Profile/fusion logic and fault handling | NOT STARTED |
-| 5 | Labelled pilot, selected weights and held-out results | NOT STARTED |
-| 6 | Complete React dashboard and illustrative 3D scene | NOT STARTED |
-| 7 | Integrated rehearsal, stability check and frozen build | NOT STARTED |
+| 0 | Camera hardware/settings/network verification | IN PROGRESS |
+| 1 | Real camera bring-up and synthetic IR provider | IN PROGRESS |
+| 2 | FastAPI ingestion, health, recording and minimum viewer | IN PROGRESS — live camera/radar measured (1.22 fps at 0.5 s interval, p95 age bound ≤1.3 s, reboot recovery 10.2 s); Wi-Fi-loss and long-run checks pending |
+| 3 | Frontal detector and execution decision | IN PROGRESS — laptop YOLOX-Nano plus on-ESP32 TFLM person classifier (58 ms on device) running side by side; agreement seen live, accuracy not evaluated |
+| 4 | External radar adapter and conditional fusion | IN PROGRESS — BLE stream works; provisional fusion implemented and tested; live fusion and scene trials pending |
+| 5 | Eligible real-data pilot and profile selection | NOT STARTED |
+| 6 | Complete React evidence display and illustrative avatar | IN PROGRESS — light redesign, range-only radar view, ESP32/laptop tiles, disaster conditions and illustrative 3D figure (perspective/overhead) done; calibration-dependent placement pending |
+| 7 | Rehearsal, failures and frozen demo | NOT STARTED |
 
-Phases 1–5 define the critical path. The minimum viewer is built in phase 2 and extended in phase 6. Optional visual work can proceed once its data contract is stable, without bypassing the sensing gates.
+Provider creation alone does not pass phase 1: real camera operation is also required. Backend/frontend work can proceed while radar access is investigated.
 
-## Phase 0 — Verify the connected hardware
+## Phase 0 — Verify camera setup
 
-### Actions
+**Wi-Fi prerequisite:** the user confirmed no antenna is attached to the
+ESP32-S3-WROOM-1U. Connect a compatible external 2.4 GHz antenna with power off,
+then validate the link. Laptop WLAN SSID matches the configured hotspot; this
+does not establish the ESP32 connection. See
+[Wi-Fi diagnostics](docs/hardware/camera-wifi-troubleshooting.md).
 
-- Preserve the original `ARES_Firmware/` sketches/history as the inspected reference; use `firmware/ares_node/` as the current working copy.
-- Record exact ESP32-S3 board/module marking, Arduino board/core version, flash/PSRAM settings and COM port.
-- Confirm physical camera wiring against the existing sketch; record IR SDA/SCL, radar TX/RX, supply connections and common ground. Check module supply and logic-level compatibility before changing connections.
-- Record full MLX90614 suffix and LD2410 variant. Do not infer optical FOV or UART protocol solely from a generic module name.
-- Record current camera IP/endpoint, power source and any already-working sketch/output. Keep Wi-Fi credentials out of shared logs.
+**Actions**
 
-### Validation
+- Preserve original firmware/history; use firmware/ares_node as the working sketch. Record identified board/flash/PSRAM settings and current COM port.
+- Confirm camera signal/power wiring and the demo Wi-Fi credentials in the ignored local header. Keep secrets out of logs/Git.
+- Keep nonworking IR out of active acquisition. IR repair/pin confirmation and radar UART wiring are not demo prerequisites.
+- Documentation is now identified: Seeed SKU 101010001 and HLKRadarTool; linked manuals describe direct BLE reports. Verify actual device/firmware/GATT before implementation claims; [integration notes](docs/hardware/radar-integration.md).
 
-- Build the preserved starting sketch with the recorded settings; save the build output.
-- Check boot diagnostics, camera initialisation and reported PSRAM availability. A successful build is not a successful hardware test.
-- Check the pin table for conflicts and compare it with actual connections; do not invent missing IR/radar GPIOs.
+**Validation**
 
-### Exit gate and evidence
+- The baseline build already passed; retain [build evidence](docs/validation/camera-build-2026-10-31.md).
+- Verify wiring/power and [board options](docs/hardware/board-config.md) before runtime tests. Recheck COM after reconnecting.
+- Record unknowns instead of inventing pin maps or connection states.
 
-- **Pass:** reproducible baseline build, verified connection table and required module/settings information recorded.
-- **Evidence:** hardware manifest, pin table, baseline build log and serial boot log.
-- **If blocked:** resolve the specific missing pin, power or board setting before integrating that device. Independent laptop scaffolding can continue.
+**Exit gate and evidence**
 
-## Phase 1 — Acquire real camera and sensor data
+- Pass: reproducible camera setup/network configuration and documented external-input limitations.
+- Evidence: board/power/pin/settings record and build log. If prerequisites are missing, keep this gate incomplete while independent software work continues.
 
-### Actions
+## Phase 1 — Real camera and synthetic IR
 
-- Start from the reference OV7670 QVGA/RGB565 path and software JPEG preview. Measure actual throughput; the sketch's `2_FPS` name is not a measurement.
-- Add MLX90614 object and sensor-temperature reads with error checks. Sensor temperature is not remote background temperature.
-- Parse the correct radar UART protocol; expose presence/moving/stationary status and distance fields only when supported by the actual module.
-- Attach monotonic timestamps, sequence IDs, validity and timeout flags. Keep acquisition schedules bounded and independent of an open browser.
+**Antenna update:** with the external antenna fitted, the node joins the hotspot (RSSI -18 dBm), serves `/capture` JPEGs to the laptop and the backend reports the camera READY. Image content is corrupted (magenta speckle, weak green), consistent with the earlier D2-low report; wiring and colour-bar checks are next. See [Wi-Fi diagnostics](docs/hardware/camera-wifi-troubleshooting.md).
 
-### Validation
+**Earlier runtime:** the viewer now reaches Wi-Fi connection and buffer-bit
+diagnostics after the SCCB fix. Camera initialisation and a returned buffer are
+supported by that code path; valid image content and network delivery remain
+unverified. The startup Wi-Fi helper now replaces infinite dots with a scan,
+disconnect reasons and a 30-second connection wait; antenna/re-upload checks
+remain required.
 
-- Camera: move a hand/object in view and confirm the returned image changes; inspect colour, corruption, orientation and measured dimensions.
-- IR: record an empty-scene baseline, then a nearer target and a warm object. Log repeatability and geometry; plausible numbers alone do not establish temperature accuracy or human classification.
-- Radar: test an empty zone, walking person, stationary person and departure. Establish the actual useful zone and account for bystanders.
-- Run all three together for an initial five-minute check. Record timeouts, resets, frame rate and update intervals.
-- Inject a read timeout for each sensor and confirm it becomes invalid/stale rather than retaining an apparently fresh value. Perform physical wiring changes with power removed.
+**SCCB probe result:** user-run reads consistently identify OV7670 PID 0x76 /
+VER 0x73 with STOP/START; repeated START fails at 8 and 20 MHz. Runtime PSRAM
+reports 8 MB. A project-local viewer fix is prepared; full camera initialisation,
+real frames and Wi-Fi still require a new upload and validation. See
+[SCCB evidence](docs/validation/camera-sccb-2026-10-31.md).
 
-### Exit gate and evidence
+**Runtime update (31 October):** user-confirmed IDE verification and a successful
+firmware boot; camera initialisation fails during SCCB identification at address
+0x21 before Wi-Fi starts. No real frame is verified. Follow the
+[camera troubleshooting and separate probe](docs/hardware/camera-sccb-troubleshooting.md)
+to check control wiring and compare register-read methods before changing drivers.
 
-- **Pass:** real images and actual readings from all three devices update with valid timestamps, and errors are explicit. No unexplained resets during the initial check.
-- **Evidence:** sample frames, raw sensor log, measured update rates and observed coverage/limitations.
-- **If blocked:** retain working inputs, mark the failed input unavailable and record a partial gate. Any synthetic diagnostic input stays explicitly labelled and cannot satisfy this gate.
+**Actions**
 
-## Phase 2 — Connect the laptop and record the evidence
+- Add/verify boot/usable-PSRAM diagnostics, camera errors and bounded Wi-Fi failure/retry reporting. Replace the current endless connect loop before unattended use.
+- Upload the configured camera baseline and obtain changing OV7670 images through /capture. Measure dimensions, corruption, orientation, FPS and age.
+- Implement standard-library IR scenarios baseline, warm_target, hot_background and unavailable; retain provenance, version/seed/sequence and simulation time.
 
-### Actions
+**Validation**
 
-- Create `ground_station/` for FastAPI ingestion/storage and `web/` for the minimum React viewer.
-- Use one camera acquisition owner and a bounded latest-frame cache; multiple browser clients must not independently compete for camera capture.
-- Define records containing session ID, source/mode, frame or sample ID, capture/sample timestamp, receive timestamp, validity, model/configuration versions and execution location.
-- Show the real image, IR readings, radar status, connection state and age. Add session start/stop and recording controls.
-- Keep `LIVE`, `REPLAY` and `SIMULATION` distinguishable. Label each input individually if a development session mixes real and synthetic sources.
+- Move a target and verify actual pixels change. Inspect image colour/orientation and boot memory diagnostics.
+- Run an initial five-minute camera check; record rates, resets and errors. Compilation alone cannot pass this gate.
+- Check synthetic replay determinism, fixed source/hardware/exclusion flags, null faults and rejection of invalid/regressing simulation times.
+- Verify generation does not require IR hardware or derive its scenario from a fire profile/person occupancy.
 
-### Validation
+**Exit gate and evidence**
 
-- Open the viewer and verify values against the serial/source log. Confirm a moving target changes the actual preview.
-- Record and replay a short session, preserving order, IDs, source labels and configuration changes.
-- Open a second client; check that capture does not duplicate and queues do not accumulate increasing lag.
-- Interrupt Wi-Fi, then restore it. Confirm stale/disconnected indications, bounded retries and recovery without disguising old frames as live.
-- Overlay results only on their matching frame IDs. Until clocks are aligned, distinguish laptop receive-to-display delay from true capture-to-display latency.
+- Pass for reduced scope: actual frames and a tested, clearly synthetic provider. No physical IR gate is claimed.
+- Evidence: real frames, boot/rate logs, provider check output and labelled fixtures.
+- If camera fails, mark unavailable; continue software work without fake live frames. Repaired IR requires its own later real-sensor validation.
 
-### Exit gate and evidence
+## Phase 2 — FastAPI, recording and minimum viewer
 
-- **Pass:** the laptop displays and records all available real inputs, identifies stale inputs and recovers from the tested connection interruption.
-- **Evidence:** recorded session with manifest, preview/rate measurements and outage/recovery log.
-- **If blocked:** keep acquisition/recording working through a simpler transport or USB telemetry, document the deviation, and retain truthful source labels.
+**Actions**
 
-## Phase 3 — Establish frontal person detection
+- Add FastAPI configuration for the ESP32 URL, one acquisition worker and bounded latest-frame storage.
+- Publish synthetic IR with actual backend publication/receive times, keeping simulation elapsed time separate.
+- Publish camera disconnected/stale and radar NOT INTEGRATED states. Add recordings/replay with per-input metadata.
+- Add the minimum React live preview/evidence/status view before decorative 3D.
 
-### Actions
+**Validation**
 
-- Evaluate a suitable frontal-view detector on real OV7670 frames, including stationary people. Record the model, licence, input size, preprocessing and output semantics.
-- Distinguish a model's boxes from FOMO-style centroids; draw only what the model actually estimates.
-- Benchmark an onboard candidate using a fixed input buffer, then live capture, then concurrent camera/IR/radar/Wi-Fi operation.
-- Make the execution decision before optional graphics work: measured ESP32 inference, or explicitly labelled laptop inference for the deadline fallback. Do not commit to custom training as a prerequisite for tomorrow's live demo.
+- Missing configuration/network means unavailable; no silent camera/radar simulation.
+- Multiple clients must not duplicate camera acquisition or create increasing lag.
+- Verify MIXED and per-input source labels survive API/storage/replay/UI. A valid synthetic number cannot make physical IR healthy.
+- Test Wi-Fi loss/recovery, stale records and matching frame IDs. Keep unknown clock offsets explicit.
 
-### Validation
+**Exit gate and evidence**
 
-- Test empty scenes, standing/walking/stationary people, varied clothes and warm nonhuman objects. Use sessions not used for fitting the detector where applicable.
-- Match overlays to source frames; check coordinate mapping after resize/crop/letterboxing.
-- Measure inference time, delivered assessment rate, detection/false-positive counts and alert delay. Include camera conversion/network overhead in the integrated benchmark.
-- For an **ESP32 execution claim**, save node-originated model outputs and timing/memory logs, disable laptop inference, and verify assessments continue with the browser closed. Compare fixed-buffer outputs with the exported reference using a documented tolerance.
-- For a **laptop fallback**, verify detection uses the received real OV7670 frames and the UI labels inference as `LAPTOP`.
+- Pass: actual preview, synthetic IR and honest external-input status display/record correctly with tested recovery.
+- Evidence: mixed-source session manifest, UI states, rates and recovery log. Partial progress is not a full live-sensing claim.
 
-### Exit gate and evidence
+## Phase 3 — Frontal detector
 
-- **Pass for frontal demo:** detections work on the intended live scene, their limitations and measured performance are recorded, and execution location is truthful.
-- **Separate edge gate:** full onboard model fits with runtime memory headroom and passes integrated operation without allocation failures or unexplained resets. A laptop fallback does not pass this gate.
-- **Evidence:** model/preprocessing manifest, labelled evaluation examples, timing report and execution-location decision.
-- **If blocked:** use the explicitly labelled laptop fallback if viable. If no detector works adequately, mark person detection incomplete rather than substitute pose graphics or synthetic predictions.
+**Actions**
 
-## Phase 4 — Implement profiles, fusion and unavailable states
+- Select/benchmark a frontal detector on actual OV7670 frames. Record licence/version, input/preprocessing and actual execution location.
+- Start with a laptop baseline. Attempt onboard deployment only with static-buffer comparison and subsequent integrated measurement.
+- Preserve coordinate transforms and the model's actual box/centroid semantics.
 
-### Actions
+**Validation**
 
-- Start with clear and reduced-visibility profiles; represent elevated thermal context separately. A fire label alone does not prove camera degradation.
-- Keep configuration versions, selected profile and actually active profile distinct until the fusion executor acknowledges application. The executor is the ESP32 in the target path or the laptop in the declared fallback.
-- Map measurements to documented comparable evidence scores before weighting. Do not average raw degrees Celsius, dBm or radar energy with detector scores.
-- Keep IR human-presence weight zero and Wi-Fi contribution disabled until phase 5 justifies them. Temperature remains visible as context.
-- Implement fixed profile weights, validity/freshness checks, evidence coverage, disagreement and explicit insufficient-evidence states. Do not silently renormalise a surviving sensor into certainty.
-- Implement persistence/hysteresis with logged parameters. Keep presence assessment separate from the camera's person locations.
+- Test empty scenes, moving/stationary people, varied clothing, occlusion and nonhuman objects on sessions separate from fitting data.
+- Measure counts, recall/precision, alert delay and throughput; match results to displayed frame IDs.
+- An ESP32 claim requires node-originated predictions/timings with laptop inference disabled. Otherwise label LAPTOP.
 
-### Validation
+**Exit gate and evidence**
 
-- Use deterministic synthetic records to check weighted arithmetic, invalid weights, unknown profiles, profile transitions, stale readings, conflicting evidence and all-input failure.
-- Confirm synthetic tests are labelled and are not counted as physical detection evidence.
-- Confirm profile selection changes weights, not raw observations, and a failed command does not appear applied.
-- Confirm unavailable camera data does not become proof of an empty scene; radar-only evidence cannot produce a newly confirmed camera location.
-- Confirm pose and person detection are not counted as independent sensor votes.
+- Pass: real-frame detection in the declared scene with measured limitations and correct execution labels.
+- Evidence: model/preprocessing manifest, labelled examples and timing/results. If no detector works adequately, leave detection incomplete; graphics cannot substitute for it.
 
-### Exit gate and evidence
+## Phase 4 — External radar and conditional fusion
 
-- **Pass:** configuration and fusion behaviour match documented cases; every assessment records its evidence ages, coverage, active configuration and execution source.
-- **Evidence:** reproducible logic checks, expected/observed outputs and versioned provisional profile file.
-- **If blocked:** show independent sensor evidence and mark fused assessment unavailable. Do not present hand-picked percentages as validated settings.
+**Actions**
 
-## Phase 5 — Select weights through a labelled pilot
+- Build against the documented BLE characteristics and framed reports, verifying the actual GATT profile and authentication first. Disconnect the phone app: the manual allows one BLE client at a time.
+- Verify fields/units, refresh rate, capture/receive timing, access and loss/recovery. Offline exports are replay data, not automatically live.
+- Test overlap with the camera's marked scene and bystander effects.
+- If a usable live feed exists, implement a real external adapter and laptop camera/radar fusion with versioned operator profiles/acknowledgement.
+- Synthetic IR stays ineligible. Any later manual input is MANUAL and excluded from automatic evaluation.
 
-### Actions
+**Validation**
 
-1. Define ground truth as at least one person present in a marked common sensing zone. Use the trial schedule and independent annotation, not the detector being evaluated, to assign labels.
-2. Before tuning, record the desired recall/false-alert/delay objective, event/window definition, freshness limits and persistence policy. Thresholds are design choices until tested.
-3. Record clear and reduced-visibility sessions covering empty scene, walking person, stationary person, idle phone alone, warm phone alone and warm mug alone. Add elevated-background trials only if actually performed.
-4. Use a removable translucent sheet in front of **only the camera** for the optical-degradation experiment; label it accordingly. An opaque cover is a separate unavailable-vision experiment. No actual smoke is required.
-5. Remove the person after placing a nonhuman test object. Record IR distance, target orientation and sensor variant; a close-range thermal result cannot establish usefulness at the demo distance.
-6. Separate fitting, validation and final test sessions, preferably with held-out people/backgrounds. A small pilot can use three distinct recording sessions, but must report its limited sample size. Never randomly divide adjacent video frames across the sets.
-7. Fit sensor evidence mappings on fitting data only. Search nonnegative weights summing to one, including zero, and tune decision/persistence thresholds on validation data. No automatic environmental reweighting is added without its own validation.
-8. Freeze the complete pipeline and run the untouched test sessions. If final results cause retuning, those sessions become development data and a new final test is needed.
+- Compare received records against the radar app during empty, walking/stationary and departure trials; test disconnect/stale/recovery.
+- Profiles change weights, not raw observations. Check arithmetic, persistence, coverage, disagreement, invalid settings and all-input failure using separate deterministic fixtures.
+- Missing radar cannot become no-person evidence or silent fully covered single-input fusion. Show camera evidence separately.
 
-### Validation
+**Exit gate and evidence**
 
-- Compare camera alone, radar alone, equal camera/radar weights, one global weight set and operator-selected condition-specific sets on the same trials.
-- Compare with/without IR and any eligible Wi-Fi feature. Do not assume three inputs outperform two; retain zero weight when a benefit is not demonstrated.
-- Include a mismatched-profile check so the effect of operator selection is visible.
-- Report TP/FP/FN counts, precision, recall, false alerts per measured unoccupied minute/hour, alert delay, participant/session counts and sensor-unavailable time, by condition.
-- State the metric unit. Example: event recall is the fraction of occupied trials alerted within a predeclared delay; time-window recall measures continued coverage. Do not interchange the two or treat adjacent frames as independent trials.
-- Separate detection misses from missing-input intervals, and report both. A short pilot with zero false alerts does not establish a long-term zero false-alert rate.
+- Automatic-fusion pass requires verified real radar data, aligned observations and tested source/fusion rules.
+- Evidence: interface notes, sample records, scene/timing and logic/fault results.
+- If no usable feed exists, deliver camera-only assessment plus synthetic thermal context beside the separate radar app. Automatic integration remains pending; invented radar readings cannot pass the gate.
 
-### Exit gate and evidence
+## Phase 5 — Eligible pilot and weight selection
 
-- **Pass for pilot calibration:** settings, selection objective, dataset splits and held-out results are reproducible. Meeting an acceptance target is a separate recorded outcome; do not pass performance merely because optimisation ran.
-- **Evidence:** dataset manifest/labels, split assignments, frozen profile/model versions, baseline comparison table and limitations.
-- **If data are insufficient or results fail:** retain provisional labels, show observed failures, and restrict claims to a proof of concept. Do not claim validated disaster detection or universally correct weights.
+**Actions**
 
-## Phase 6 — Complete the dashboard and explanatory 3D view
+- Define presence in a common marked zone with independent ground truth. Predeclare metric units, recall/false-alert/delay objectives and missing-input policy.
+- Collect clear/degraded camera trials: empty, moving/stationary people and nonhuman objects. Use a translucent sheet over only the camera; an opaque cover is an unavailable-vision test.
+- Collect synchronised radar only after its real adapter works. Otherwise evaluate camera only and defer automatic fusion calibration.
+- Split complete fitting/validation/final sessions, preferably people/backgrounds too. Never split adjacent video frames randomly across sets.
+- Fit evidence mappings on fitting data, tune nonnegative camera/radar weights and decision/persistence thresholds on validation data, then freeze before untouched tests.
 
-### Actions
+**Validation**
 
-- Extend the React viewer with camera detections, sensor history, selected/active profile, weights, weighted contributions, assessment, thermal context and health.
-- Add a generic avatar and perspective/overhead toggle in Three.js. Label the scene illustrative; avatar rotation does not produce a measured overhead camera image.
-- Use schematic zone placement initially. For meaningful floor position, fix the camera, identify four known floor points, and map a visible foot-contact estimate onto that calibrated plane.
-- Optional: estimate pose on the laptop and animate the avatar. Record pose execution location and distinguish estimated pose from measured depth or a scanned body.
-- Freeze/fade the avatar with a last-seen label when visual tracking is lost; radar-only presence cannot keep a precise live pose/location confirmed.
+- Compare only actually available real-source baselines: camera, radar, equal weights, global and condition-specific sets.
+- Exclude synthetic IR, simulation and manual input from physical accuracy/weight fitting. Record software fixture checks separately.
+- Report TP/FP/FN, precision/recall, unoccupied exposure/false alerts, delay, participants/sessions and unavailable time by condition.
+- Physical human-versus-phone thermal comparison is deferred. Synthetic chart values cannot establish human thermal discrimination or sensor benefit.
 
-### Validation
+**Exit gate and evidence**
 
-- Confirm all displayed values come from recorded/live records and change with the actual inputs, not presentation-only animations.
-- Switch profile and verify acknowledgement/version, contribution bars and assessment against the phase 4 calculation.
-- Check lost detections, stale frames, invalid sensors and replay mode visibly alter the correct UI elements.
-- If floor calibration is used, test separate marked positions not used for calibration and record position error. Hide or mark location uncertain when feet are not visible or assumptions fail.
-- Confirm overhead toggle changes the rendering viewpoint only. Do not count rendered screenshots as real overhead training or validation data.
+- Calibration pass requires reproducible eligible data, frozen settings and held-out results; meeting targets is a separate reported outcome.
+- Evidence: recordings/labels/splits, versions, objective, baseline table and limits. Retuning after final results requires new final-test data.
+- Insufficient data means provisional settings. Short trials with no false alerts cannot establish a long-term zero false-alert rate.
 
-### Exit gate and evidence
+## Phase 6 — Evidence dashboard and avatar
 
-- **Pass:** the interface explains actual evidence, uncertainty and processing location, and its 3D content cannot be mistaken for measured aerial reconstruction.
-- **Evidence:** screenshots or screen recording for live, degraded, stale and replay states; calibration report if applicable.
-- **If blocked:** keep the working evidence dashboard and a simple labelled avatar/zone. Remove unstable pose animation before sacrificing real acquisition or clear source labels.
+**Actions**
 
-## Phase 7 — Rehearse, test stability and freeze
+- Complete React source/age/health, selected/active profile, camera-only/fusion state, synthetic temperature chart and recording controls.
+- Add independent synthetic-scenario control and persistent SYNTHETIC plus IR hardware unavailable badges.
+- Add a generic Three.js avatar/overhead toggle. Optional pose animation reports its actual execution location.
+- Keep positions schematic until fixed-camera floor calibration/visible foot estimates are tested.
 
-### Actions
+**Validation**
 
-- Rehearse: empty scene → person enters → stationary person → translucent screen → operator selects reduced visibility → screen removed → warm object without a person → camera obstruction → recovery.
-- Exercise a sensor timeout, Wi-Fi interruption and restart. Record recovery and any manual intervention required.
-- Run all enabled features together for a measured stability period. Aim for the existing one-hour soak target if time permits; a shorter run must state its actual duration.
-- Record software/model/profile versions, build settings, launch instructions and the tested hardware layout. Save a known working build and a recorded session as separate backups.
-- Freeze the demonstration configuration. Changes after the freeze require repeating the affected checks; model/weight/threshold changes also invalidate the prior final evaluation for the new configuration.
+- No global LIVE badge disguises IR simulation; no separate radar app implies an integrated score.
+- Selecting fire must not automatically manufacture temperature evidence.
+- Lost vision fades/freezes the avatar with last-seen status; broad radar cannot confirm a newly precise pose/location.
+- Test replay labels, missing inputs and unknown ages. If floor mapping is used, measure error at held-out points.
 
-### Validation
+**Exit gate and evidence**
 
-- Complete the scripted demonstration twice without unexplained resets, growing lag or synthetic data appearing as live observations.
-- Verify no-camera and no-input states are truthful; missing observations cannot produce an all-clear message or fabricated position.
-- Check integrated frame/assessment rate, available latency measurements, sensor ages, memory where observable, dropped data and fault recovery against the declared targets below.
-- Restart the documented system and confirm it opens in the correct mode with the expected configuration. Replay must retain a prominent `REPLAY` label.
+- Pass: UI reflects actual sources/uncertainty and illustrative content is clear.
+- Evidence: mixed/replay/fault screen recordings and any calibration report. Drop unstable pose animation before weakening source labels or acquisition.
 
-### Exit gate and evidence
+## Phase 7 — Rehearse and freeze
 
-- **Pass:** the defined reduced-scope demo is repeatable, its required performance gates are met, faults are explicit and limitations are documented. Optional failures are removed or isolated and reported.
-- **Evidence:** rehearsal checklist, actual-duration stability log, metrics, frozen version manifest, known issues and launch/recovery instructions.
-- **If blocked:** disable optional pose/CSI/graphics features and repeat the relevant checks. Declare any remaining missing capability rather than marking the whole plan complete.
+**Actions**
 
-## Proposed engineering targets — not measured results
+- Rehearse entry/stationary/departure, optical degradation, operator profiles, labelled synthetic thermal scenarios, camera obstruction and recovery.
+- Include integrated radar only if phase 4 passed; otherwise show its app separately and state the limitation.
+- Exercise Wi-Fi outage, stale input, restart and replay. Run a measured concurrent stability period; aim for the earlier one-hour goal if feasible and report actual duration.
+- Save versions, launch instructions, known issues, a working build and clearly labelled recorded backup.
 
-Confirm these before the integrated run; log revisions and reasons. These are demonstration usability targets, not disaster-response requirements or validated hardware specifications.
+**Validation**
 
-| Area | Proposed minimum / check | Stretch target or qualification |
+- Complete two rehearsals without unexplained resets, accumulating lag or synthetic/manual data represented as actual automatic evidence.
+- Check actual rates/ages and recovery against declared targets; missing input never means all-clear or fabricated position.
+- Verify restart mode/configuration. Later changes repeat affected checks; model/weight changes need new evaluation.
+
+**Exit gate and evidence**
+
+- Pass: the explicitly reduced demo is repeatable and meets declared requirements. Missing real IR/automatic radar remains documented, not silently passed.
+- Evidence: rehearsal/duration/fault/metrics logs, frozen manifest and recovery instructions. Remove optional pose/CSI if they destabilise the core.
+
+## Edge-processing benefits (E1–E4)
+
+Added 31 October 2026. Each item must produce a measured before/after result. Claim only what is measured.
+Radar reaches the laptop directly, so radar processing is ground-station processing, not on-node processing.
+
+| Item | Deliverable | Status |
 |---|---|---|
-| Real preview | At least 1 fresh displayed frame/second without accumulating lag | Existing implementation target: at least 3 FPS if measured feasible |
-| Assessment throughput | At least 1 completed assessment/second | Existing implementation target: 2/second |
-| Displayed frame age | p95 at most 2 seconds when capture age is measurable | Aim for 1 second; without clock alignment report receive-to-display delay separately |
-| Alert timing | Predeclare a target; initial engineering target p95 at most 2 seconds from annotated entry | Include persistence and communication delay; report misses separately |
-| Onboard processing | Measure capture, preprocess, inference and fusion separately | Existing target p95 capture-to-assessment at most 500 ms; only applicable to verified onboard execution |
-| Detection quality | Record the acceptance recall and false-alert budget before phase 5 tuning | No accuracy percentage is asserted by this plan |
-| Freshness | Declare timeout per stream before testing and verify invalidation after it | No repeated old packet may refresh its original measurement time |
-| Stability | Two complete rehearsals and a documented concurrent run | Aim for one hour; report actual duration and failures |
+| E1 | Event-triggered sending + privacy mode | NOT STARTED |
+| E2 | Radar outlier filtering, smoothing and debounce | NOT STARTED |
+| E3 | ESP32 vs laptop detection latency | IN PROGRESS — first figures: ESP32 58 ms inference + ~24 ms prep; laptop YOLOX ~20-44 ms; structured comparison pending |
+| E4 | Offline event buffering on the node | NOT STARTED |
 
-## Optional experiment — RSSI/CSI
+**E1 — Event-triggered sending and privacy mode** (firmware, backend, UI)
+- The node sends small heartbeats (person score, sequence, health) by default. It sends the JPEG when the on-node score or a motion check fires, or when the operator requests one. Adaptive rate: idle vs active fps.
+- Privacy mode: no image leaves the node unless triggered or requested; the dashboard shows when images are withheld.
+- Measure: bytes per minute for always-send vs edge-filtered in empty and occupied scenes; % of time with no image sent; any missed person events caused by filtering.
 
-Run only after the core pipeline works. This is not a requirement for the initial demo pass.
+**E2 — Radar anomaly isolation** (backend)
+- Reject physically impossible jumps (Hampel/median filter), smooth distance (moving median or Kalman), learn an empty-room energy baseline, and require N consecutive presence reports before an alert. Forward only state changes and significant moves.
+- Keep raw reports recorded alongside filtered ones; filtering must not hide disconnects or staleness.
+- Measure against tape-measure ground truth: distance error and variance before vs after; % of readings flagged; false alerts per hour before vs after; added alert delay; % of reports suppressed.
 
-- RSSI: log timestamped received signal strength and variation as communication/experimental data first.
-- CSI: verify acquisition support in the chosen firmware build; configure received traffic and move processing out of the Wi-Fi callback into bounded queued work.
-- Keep transmitter and receiver fixed. If a phone is the hotspot/transmitter, do not move that same phone as the test reflector. Keep the link's sensing zone distinct from the camera/radar zone unless overlap has been verified.
-- Record empty, moving-person, stationary-person and nonhuman-disturbance trials, including camera-streaming load. Check that traffic or packet-rate changes do not become an apparent presence signal.
-- **Validation gate:** usable acquisition, repeatable labelled behaviour, held-out improvement and no unacceptable degradation of the core pipeline. RSSI/CSI are not independent votes merely because both are available from one link.
-- **If not passed:** keep a labelled diagnostic plot or omit the feature; human-presence weight remains zero. A motion response does not establish stationary human detection or localisation.
+**E3 — Edge latency** (firmware, backend)
+- Timestamp each stage per frame: capture, on-node inference, JPEG, network, laptop YOLOX, dashboard display. Unsynchronised clocks: use node uptime on the node side and backend receive time on the laptop side, and report them separately.
+- Measure: median/p95 of time from person appearing to ESP32 flag vs laptop result; on-node inference time; ESP32/laptop agreement rate on matching frames.
 
-## Evidence and completion record
+**E4 — Offline buffering** (firmware, backend)
+- During Wi-Fi loss the node keeps detecting and stores events (node uptime, sequence, score) in a bounded PSRAM ring buffer, then uploads them on reconnect. Uploaded events are labelled BUFFERED with their original node time.
+- Measure: events kept vs lost during timed outages; buffer capacity in minutes; upload time after reconnect.
 
-Suggested working layout; these application/evidence directories are deliverables to create, not existing completed software:
+Gates: E1–E4 results need valid camera frames (fix D2/D4 wiring first) except E2, which can start with the radar now. Synthetic IR is excluded from all E-item metrics.
 
-```text
-firmware/ares_node/             working firmware and configuration
-ground_station/                FastAPI ingestion, recording and evaluation
-web/                           React dashboard and illustrative 3D scene
-models/                        model/export/preprocessing manifests
-benchmarks/sessions/            recordings and independent ground truth
-benchmarks/results/             metrics, comparisons and timing reports
-docs/hardware/                 verified wiring and board/module settings
-docs/validation/                gate records, fault checks and rehearsal notes
-```
+## Targets and records
 
-For each phase record: status, executor/tester, date, hardware/software/configuration versions, checks performed, measured outcomes, evidence paths, failures, chosen fallback and remaining work. `NOT RUN` is different from `PASS`.
+Provisional usability goals, not measured capabilities or disaster-response requirements: at least one fresh frame/assessment per second, p95 capture age at most two seconds where measurable, and a predeclared recall/false-alert/delay objective before tuning. With unsynchronised clocks, report receive-to-display separately. Higher-rate/onboard timing goals apply only if built and measured.
 
-## Immediate next actions
+Record status, tester/date, hardware/software/source configuration, checks, measured results, evidence, failures, fallback and remaining work per phase. NOT RUN differs from PASS. Keep physical, synthetic, manual and replay evaluation separate.
 
-- [ ] Obtain the current working camera sketch/status, stream IP and Arduino COM port.
-- [ ] Confirm actual IR SDA/SCL and radar TX/RX GPIOs and power connections.
-- [ ] Record board/PSRAM settings and full MLX90614/radar variant markings.
-- [ ] Complete phase 0 and start camera/IR/radar bring-up in phase 1.
-- [ ] Establish the common data record and minimum laptop viewer in phase 2.
+## Immediate coding sequence
 
-Related context: [PLAN.md](PLAN.md) and [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md). This action plan defines the current execution order and phase validation; none of the earlier candidate-model or timing targets are completed results.
+- [x] Identify board, install CLI and compile camera baseline.
+- [x] Validate the standalone synthetic IR provider: four checks passed; [evidence](docs/validation/synthetic-ir-2026-10-31.md).
+- [x] Add FastAPI configuration, camera worker/cache, synthetic IR publication and health/status; software checks passed.
+- [x] Add recording/provenance and minimum React view; actual radar/IR session export verified.
+- [ ] Validate the actual camera runtime/feed when its address and network configuration are available.
+- [x] Identify the radar documentation and candidate BLE interface; [findings](docs/hardware/radar-integration.md).
+- [x] Implement BLE authentication/report parsing and verify an actual stream (58-report probe, then dashboard streaming).
+- [ ] Run labelled radar/scene alignment and physical disconnect/reconnect checks before automatic fusion.
+- [x] Integrate a laptop detector (YOLOX-Nano, Apache-2.0) with frame-matched, camera-only labelled results; [evidence](docs/validation/detector-2026-10-31.md).
+- [x] Add node `/health`, `/colorbar`, mDNS and frame headers (`ares-node-0.2`, uploaded and verified).
+- [ ] Verify a positive detection, fix camera D2/D4 wiring and measure detection on real OV7670 frames.
+- [x] Implement provisional camera/radar fusion with coverage, persistence and disagreement; [evidence](docs/validation/fusion-2026-10-31.md).
+- [x] Run live fusion with the real radar (camera + radar, both profiles); [evidence](docs/validation/fusion-2026-10-31.md).
+- [x] Measure the live pipeline (rate, age, single-owner acquisition, node reboot recovery); [evidence](docs/validation/pipeline-2026-10-31.md).
+- [ ] Secure the intermittent camera D2 wire.
+- [x] Add on-ESP32 person inference alongside each image (`ares-node-0.3`, TFLM person_detect) and show ESP32 vs LAPTOP; [evidence](docs/validation/edge-and-scene-2026-10-31.md).
+- [x] Add literature-informed disaster conditions (IR prior applied as 0 while synthetic) and the illustrative 3D scene; [evidence](docs/validation/edge-and-scene-2026-10-31.md).
+- [ ] Collect eligible data and evaluate both detectors on OV7670 frames.
+
+IR repair and radar GPIO wiring are not immediate prerequisites. CSI remains optional after a stable core and a separate labelled experiment.

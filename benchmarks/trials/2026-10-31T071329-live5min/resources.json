@@ -1,0 +1,84 @@
+{
+ "basis": "M=measured, D=derived from measured, E=datasheet estimate (no current/voltage measured)",
+ "flash": {
+  "image_bytes": 1405299,
+  "app_partition_bytes": 3342336,
+  "added_by_inference_bytes": 374524,
+  "model_bytes": 300568,
+  "tflm_esp_nn_code_bytes": 68531,
+  "camera_driver_bytes": 67413,
+  "ares_app_bytes": 105563,
+  "idf_arduino_wifi_rest_bytes": 863224,
+  "basis": "M (compiler, linker map)"
+ },
+ "ram": {
+  "static_dram_bytes": 66760,
+  "dram_bytes": 327680,
+  "iram_code_bytes": 80896,
+  "arena_used_bytes": 122572,
+  "arena_allocated_bytes": 143360,
+  "free_heap_with_model_bytes": [
+   56412,
+   56564
+  ],
+  "free_heap_without_model_bytes": 201000,
+  "psram_used_bytes": [
+   323736,
+   331812
+  ],
+  "basis": "M (build, TFLM boot log, /health)"
+ },
+ "cpu": {
+  "esp32_ms_per_frame": {
+   "preprocess": 24,
+   "inference": 58
+  },
+  "esp32_cycles_per_inference": 13920000.0,
+  "esp32_one_core_load_at_1_05_fps": 0.086,
+  "esp32_one_core_load_at_1_22_fps": 0.1,
+  "laptop_yolox_wall_duty": 0.0196,
+  "laptop_upper_bound_all_logical": 0.0098,
+  "basis": "D"
+ },
+ "power_energy_estimates": {
+  "esp32_idle_240mhz_mA": [
+   32.9,
+   47.6
+  ],
+  "esp32_one_core_simd_240mhz_mA": [
+   72.4,
+   87.9
+  ],
+  "esp32_one_core_32bit_240mhz_mA": [
+   51.2,
+   65.9
+  ],
+  "wifi_tx_peak_mA": [
+   283,
+   340
+  ],
+  "wifi_rx_mA": [
+   88,
+   91
+  ],
+  "ov7670_mW_upper": 38,
+  "radar_mW": 260.7,
+  "esp32_marginal_mJ_per_inference": [
+   3.5,
+   7.7
+  ],
+  "esp32_whole_chip_mJ_per_inference": [
+   12.6,
+   16.8
+  ],
+  "laptop_tdp_W": 45,
+  "laptop_upper_bound_J_per_inference": 0.84,
+  "sources": [
+   "ESP32-S3 Series Datasheet v2.2 Tables 5-7, 5-9",
+   "OV7670/OV7171 datasheet v1.01 DC table",
+   "Seeed 24GHz mmWave for XIAO user manual V1.00 s7 Table 2",
+   "AMD Ryzen 7 260 product page (2026-10-31)"
+  ],
+  "basis": "E"
+ }
+}

@@ -1,0 +1,129 @@
+{
+ "session_id": "2092b6e540e947d48f36183db3bd2dc6",
+ "live_profile": "clear",
+ "segment_s": 3.0,
+ "scale": 0.1,
+ "ground_truth": "person present inside the marked zone, by protocol timing; settle window excluded",
+ "segments": [
+  {
+   "index": 1,
+   "id": "empty_start",
+   "condition": "Empty scene",
+   "person_present": false,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:38.253676+00:00",
+   "end_utc": "2026-10-31T01:34:41.254680+00:00",
+   "start_s": 1.172,
+   "end_s": 4.188,
+   "cue": "Step out of view. Leave the area in front of the sensors, at least six metres away or out of the room."
+  },
+  {
+   "index": 2,
+   "id": "walk",
+   "condition": "Walking",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:41.334485+00:00",
+   "end_utc": "2026-10-31T01:34:44.334995+00:00",
+   "start_s": 4.266,
+   "end_s": 7.266,
+   "cue": "Walk in and move slowly left and right, about two metres in front of the camera."
+  },
+  {
+   "index": 3,
+   "id": "stand",
+   "condition": "Standing, frontal",
+   "person_present": true,
+   "settle_s": 0.30000000000000004,
+   "start_utc": "2026-10-31T01:34:44.417709+00:00",
+   "end_utc": "2026-10-31T01:34:47.418339+00:00",
+   "start_s": 7.344,
+   "end_s": 10.344,
+   "cue": "Stand still, facing the camera, about two metres away."
+  },
+  {
+   "index": 4,
+   "id": "far",
+   "condition": "Standing, far",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:47.551451+00:00",
+   "end_utc": "2026-10-31T01:34:50.551985+00:00",
+   "start_s": 10.485,
+   "end_s": 13.485,
+   "cue": "Step back to about three and a half metres and stand still."
+  },
+  {
+   "index": 5,
+   "id": "side",
+   "condition": "Standing, side view",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:50.643029+00:00",
+   "end_utc": "2026-10-31T01:34:53.643655+00:00",
+   "start_s": 13.563,
+   "end_s": 16.563,
+   "cue": "Come back to two metres, turn sideways and stay still."
+  },
+  {
+   "index": 6,
+   "id": "crouch",
+   "condition": "Sitting or crouching",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:53.732436+00:00",
+   "end_utc": "2026-10-31T01:34:56.733681+00:00",
+   "start_s": 16.656,
+   "end_s": 19.656,
+   "cue": "Sit down or crouch at about two metres and stay still."
+  },
+  {
+   "index": 7,
+   "id": "occluded",
+   "condition": "Partly occluded",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:56.818761+00:00",
+   "end_utc": "2026-10-31T01:34:59.818903+00:00",
+   "start_s": 19.75,
+   "end_s": 22.75,
+   "cue": "Stand behind a chair or table so that only your upper body is visible."
+  },
+  {
+   "index": 8,
+   "id": "camera_covered",
+   "condition": "Camera covered",
+   "person_present": true,
+   "settle_s": 0.8,
+   "start_utc": "2026-10-31T01:34:59.909902+00:00",
+   "end_utc": "2026-10-31T01:35:02.910254+00:00",
+   "start_s": 22.828,
+   "end_s": 25.828,
+   "cue": "Cover the camera lens with paper or cloth, then step back to two metres and stand still."
+  },
+  {
+   "index": 9,
+   "id": "object_only",
+   "condition": "Object, no person",
+   "person_present": false,
+   "settle_s": 0.8,
+   "start_utc": "2026-10-31T01:35:02.994568+00:00",
+   "end_utc": "2026-10-31T01:35:05.995790+00:00",
+   "start_s": 25.922,
+   "end_s": 28.922,
+   "cue": "Uncover the camera. Put a bag or jacket on a chair two metres away, then leave the area."
+  },
+  {
+   "index": 10,
+   "id": "empty_end",
+   "condition": "Empty scene",
+   "person_present": false,
+   "settle_s": 0.30000000000000004,
+   "start_utc": "2026-10-31T01:35:06.077689+00:00",
+   "end_utc": "2026-10-31T01:35:09.078257+00:00",
+   "start_s": 29.0,
+   "end_s": 32.0,
+   "cue": "Stay out of view. Final empty check."
+  }
+ ]
+}

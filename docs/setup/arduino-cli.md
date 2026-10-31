@@ -41,3 +41,18 @@ Compile only:
 ```
 
 Recheck the port before any upload; COM3 was the observed port on the development computer, not a portable configuration. Compilation is not validation of camera frames, usable PSRAM, connectivity or AI execution.
+
+## Connect the camera to a hotspot
+
+1. Put the exact hotspot SSID/password into the local ignored wifi_secrets.h. Changing this file alone does not change firmware already running on the ESP32.
+2. Enable a 2.4 GHz hotspot and connect the laptop to that same network. The [ESP32-S3 supports 2.4 GHz Wi-Fi](https://www.espressif.com/products/socs/esp32-s3); a 5 GHz-only hotspot will not work with this node.
+3. Compile and upload the current sketch using the recorded board/flash/PSRAM settings. Close any serial monitor before upload, then reopen it at 115200 baud.
+4. Read the actual IP printed after Wi-Fi connection and HTTP-server startup. Do not guess it from the phone's hotspot address or substitute localhost for the ESP32 address.
+5. Test http://ACTUAL-ESP32-IP/capture from the laptop. It should return an actual changing JPEG when refreshed.
+6. Enter that /capture URL into the ARES dashboard's ESP32 capture endpoint field and apply it. The Python backend then acquires frames for the viewer.
+
+The baseline sketch initialises the camera before joining Wi-Fi and starts its HTTP server only after association succeeds. Wrong Wi-Fi credentials can therefore leave it waiting indefinitely before the server starts. A camera initialisation error earlier in the boot log is a separate issue that new credentials will not resolve. A missing dashboard camera URL is another separate configuration step.
+
+If an IP is printed but /capture cannot be reached, check that both devices remain on the same hotspot and test whether it permits communication between connected clients. Keep a clear distinction between association failure, camera/capture failure and backend URL configuration.
+
+Credentials are local configuration, not project documentation or Git content. Never publish the populated header or binaries containing its values.

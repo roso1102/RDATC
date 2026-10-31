@@ -1,22 +1,25 @@
 # ARES — current interactive demonstration
 
-**Aerial Reconnaissance Emergency Support System:** one ESP32-S3 node with an OV7670 camera, MLX90614 IR thermometer and LD2410-family radar, connected over local Wi-Fi to a laptop ground station.
+**Aerial Reconnaissance Emergency Support System:** an ESP32-S3/OV7670 camera node and laptop ground station. IR hardware is nonworking, so temperature values are explicitly synthetic. Radar is a separate app/web system, not connected to the ESP32.
 
 Start with [TEAM_HANDOFF.md](TEAM_HANDOFF.md) for the original vision, decision history, component roles and verified implementation status. Follow [ACTION_PLAN.md](ACTION_PLAN.md) for the ordered phases, validation gates, evidence requirements and fallback decisions.
 
 ## Current status
 
 - USB identification confirmed an ESP32-S3 with 8 MB flash and 8 MB embedded PSRAM. The camera working sketch compiles with the recorded settings.
-- Live camera/sensor acquisition, person detection, fusion calibration, the React/FastAPI application and the 3D scene remain to be implemented or validated. A successful compile is not a completed demo.
+- FastAPI, the React viewer, source-labelled recording/export and synthetic IR are implemented. A direct BLE connection authenticated and decoded 58 real radar reports; the backend subsequently streamed real radar into the dashboard.
+- Camera runtime/address, person detection, calibrated fusion and the 3D scene remain pending. No automatic fused person result is fabricated while the detector is absent.
 - The imminent camera setup is frontal and interactive; overhead aerial validation is deferred. LoRa, GPS, Raspberry Pi and multiple nodes are outside this demo.
 - Operator-selected condition profiles are planned. Numerical weights require labelled development/validation trials and separate held-out evaluation.
-- The MLX90614 initially provides thermal context; it is not a spatial thermal camera. Optional RSSI/CSI sensing and pose-driven avatar animation follow the core live pipeline.
+- Synthetic IR retains persistent source labels and zero live human-presence weight. Actual radar reports are shown separately; presence-model/fusion calibration still require labelled real-data trials. RSSI/CSI and pose animation follow the core live pipeline.
+
+See [ground-station setup](ground_station/README.md), [the source contract](docs/synthetic-ir-demo.md) and [backend validation](docs/validation/backend-2026-10-31.md). Use the project .venv and start-backend.cmd, then open http://127.0.0.1:8000. Build web/ first for a fresh checkout. No radar GPIO wiring or IR repair is required.
 
 ## Working firmware and setup
 
 Use [firmware/ares_node/ares_node.ino](firmware/ares_node/ares_node.ino). Copy [wifi_secrets.example.h](firmware/ares_node/wifi_secrets.example.h) to `wifi_secrets.h` in that folder and edit the copy locally. Populated credentials, local CLI configuration, tool downloads and build outputs are ignored.
 
-See [CLI setup](docs/setup/arduino-cli.md), [identified board settings](docs/hardware/board-config.md) and [camera compile validation](docs/validation/camera-build-2026-10-31.md). The [supplied circuit image](docs/hardware/wiring-2026-10-31.png) is a historical reference that includes excluded LoRa hardware; actual IR/radar pin and power connections still need verification.
+See [CLI setup](docs/setup/arduino-cli.md), [identified board settings](docs/hardware/board-config.md) and [camera compile validation](docs/validation/camera-build-2026-10-31.md). The [supplied circuit image](docs/hardware/wiring-2026-10-31.png) is historical: it includes excluded LoRa and radar wiring that does not describe the current separate radar setup.
 
 The remaining design documents are [PLAN.md](PLAN.md) and [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md). Planned models, performance targets and illustrative 3D views must not be presented as measured execution, accuracy or reconstructed geometry.
 

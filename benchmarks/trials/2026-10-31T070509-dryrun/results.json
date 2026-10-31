@@ -1,0 +1,966 @@
+{
+ "trial": "2026-10-31T070509-dryrun",
+ "session_id": "2092b6e540e947d48f36183db3bd2dc6",
+ "live_profile": "clear",
+ "segments": [
+  {
+   "index": 1,
+   "id": "empty_start",
+   "condition": "Empty scene",
+   "person_present": false,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:38.253676+00:00",
+   "end_utc": "2026-10-31T01:34:41.254680+00:00",
+   "start_s": 1.172,
+   "end_s": 4.188,
+   "cue": "Step out of view. Leave the area in front of the sensors, at least six metres away or out of the room."
+  },
+  {
+   "index": 2,
+   "id": "walk",
+   "condition": "Walking",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:41.334485+00:00",
+   "end_utc": "2026-10-31T01:34:44.334995+00:00",
+   "start_s": 4.266,
+   "end_s": 7.266,
+   "cue": "Walk in and move slowly left and right, about two metres in front of the camera."
+  },
+  {
+   "index": 3,
+   "id": "stand",
+   "condition": "Standing, frontal",
+   "person_present": true,
+   "settle_s": 0.30000000000000004,
+   "start_utc": "2026-10-31T01:34:44.417709+00:00",
+   "end_utc": "2026-10-31T01:34:47.418339+00:00",
+   "start_s": 7.344,
+   "end_s": 10.344,
+   "cue": "Stand still, facing the camera, about two metres away."
+  },
+  {
+   "index": 4,
+   "id": "far",
+   "condition": "Standing, far",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:47.551451+00:00",
+   "end_utc": "2026-10-31T01:34:50.551985+00:00",
+   "start_s": 10.485,
+   "end_s": 13.485,
+   "cue": "Step back to about three and a half metres and stand still."
+  },
+  {
+   "index": 5,
+   "id": "side",
+   "condition": "Standing, side view",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:50.643029+00:00",
+   "end_utc": "2026-10-31T01:34:53.643655+00:00",
+   "start_s": 13.563,
+   "end_s": 16.563,
+   "cue": "Come back to two metres, turn sideways and stay still."
+  },
+  {
+   "index": 6,
+   "id": "crouch",
+   "condition": "Sitting or crouching",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:53.732436+00:00",
+   "end_utc": "2026-10-31T01:34:56.733681+00:00",
+   "start_s": 16.656,
+   "end_s": 19.656,
+   "cue": "Sit down or crouch at about two metres and stay still."
+  },
+  {
+   "index": 7,
+   "id": "occluded",
+   "condition": "Partly occluded",
+   "person_present": true,
+   "settle_s": 0.5,
+   "start_utc": "2026-10-31T01:34:56.818761+00:00",
+   "end_utc": "2026-10-31T01:34:59.818903+00:00",
+   "start_s": 19.75,
+   "end_s": 22.75,
+   "cue": "Stand behind a chair or table so that only your upper body is visible."
+  },
+  {
+   "index": 8,
+   "id": "camera_covered",
+   "condition": "Camera covered",
+   "person_present": true,
+   "settle_s": 0.8,
+   "start_utc": "2026-10-31T01:34:59.909902+00:00",
+   "end_utc": "2026-10-31T01:35:02.910254+00:00",
+   "start_s": 22.828,
+   "end_s": 25.828,
+   "cue": "Cover the camera lens with paper or cloth, then step back to two metres and stand still."
+  },
+  {
+   "index": 9,
+   "id": "object_only",
+   "condition": "Object, no person",
+   "person_present": false,
+   "settle_s": 0.8,
+   "start_utc": "2026-10-31T01:35:02.994568+00:00",
+   "end_utc": "2026-10-31T01:35:05.995790+00:00",
+   "start_s": 25.922,
+   "end_s": 28.922,
+   "cue": "Uncover the camera. Put a bag or jacket on a chair two metres away, then leave the area."
+  },
+  {
+   "index": 10,
+   "id": "empty_end",
+   "condition": "Empty scene",
+   "person_present": false,
+   "settle_s": 0.30000000000000004,
+   "start_utc": "2026-10-31T01:35:06.077689+00:00",
+   "end_utc": "2026-10-31T01:35:09.078257+00:00",
+   "start_s": 29.0,
+   "end_s": 32.0,
+   "cue": "Stay out of view. Final empty check."
+  }
+ ],
+ "detectors": {
+  "esp32_tflm": {
+   "n": 30,
+   "tp": 1,
+   "fp": 0,
+   "fn": 19,
+   "tn": 10,
+   "precision": 1.0,
+   "recall": 0.05,
+   "f1": 0.095,
+   "specificity": 1.0,
+   "false_alert_rate": 0.0,
+   "accuracy": 0.367,
+   "roc_auc": 0.55
+  },
+  "laptop_yolox": {
+   "n": 30,
+   "tp": 4,
+   "fp": 2,
+   "fn": 16,
+   "tn": 8,
+   "precision": 0.667,
+   "recall": 0.2,
+   "f1": 0.308,
+   "specificity": 0.8,
+   "false_alert_rate": 0.2,
+   "accuracy": 0.4,
+   "roc_auc": 0.495
+  },
+  "radar": {
+   "n": 248,
+   "tp": 174,
+   "fp": 74,
+   "fn": 0,
+   "tn": 0,
+   "precision": 0.702,
+   "recall": 1.0,
+   "f1": 0.825,
+   "specificity": 0.0,
+   "false_alert_rate": 1.0,
+   "accuracy": 0.702
+  },
+  "fusion_live": {
+   "n": 24,
+   "tp": 3,
+   "fp": 0,
+   "fn": 13,
+   "tn": 8,
+   "precision": 1.0,
+   "recall": 0.188,
+   "f1": 0.316,
+   "specificity": 1.0,
+   "false_alert_rate": 0.0,
+   "accuracy": 0.458
+  }
+ },
+ "per_condition": {
+  "esp32_tflm": {
+   "empty_start": {
+    "n": 4,
+    "positive_rate": 0.0
+   },
+   "walk": {
+    "n": 3,
+    "positive_rate": 0.0
+   },
+   "stand": {
+    "n": 3,
+    "positive_rate": 0.333
+   },
+   "far": {
+    "n": 3,
+    "positive_rate": 0.0
+   },
+   "side": {
+    "n": 3,
+    "positive_rate": 0.0
+   },
+   "crouch": {
+    "n": 3,
+    "positive_rate": 0.0
+   },
+   "occluded": {
+    "n": 2,
+    "positive_rate": 0.0
+   },
+   "camera_covered": {
+    "n": 3,
+    "positive_rate": 0.0
+   },
+   "object_only": {
+    "n": 3,
+    "positive_rate": 0.0
+   },
+   "empty_end": {
+    "n": 3,
+    "positive_rate": 0.0
+   }
+  },
+  "laptop_yolox": {
+   "empty_start": {
+    "n": 4,
+    "positive_rate": 0.25
+   },
+   "walk": {
+    "n": 3,
+    "positive_rate": 0.0
+   },
+   "stand": {
+    "n": 3,
+    "positive_rate": 0.333
+   },
+   "far": {
+    "n": 3,
+    "positive_rate": 0.333
+   },
+   "side": {
+    "n": 3,
+    "positive_rate": 0.333
+   },
+   "crouch": {
+    "n": 3,
+    "positive_rate": 0.0
+   },
+   "occluded": {
+    "n": 2,
+    "positive_rate": 0.0
+   },
+   "camera_covered": {
+    "n": 3,
+    "positive_rate": 0.333
+   },
+   "object_only": {
+    "n": 3,
+    "positive_rate": 0.333
+   },
+   "empty_end": {
+    "n": 3,
+    "positive_rate": 0.0
+   }
+  },
+  "radar": {
+   "empty_start": {
+    "n": 25,
+    "positive_rate": 1.0
+   },
+   "walk": {
+    "n": 25,
+    "positive_rate": 1.0
+   },
+   "stand": {
+    "n": 27,
+    "positive_rate": 1.0
+   },
+   "far": {
+    "n": 25,
+    "positive_rate": 1.0
+   },
+   "side": {
+    "n": 25,
+    "positive_rate": 1.0
+   },
+   "crouch": {
+    "n": 25,
+    "positive_rate": 1.0
+   },
+   "occluded": {
+    "n": 25,
+    "positive_rate": 1.0
+   },
+   "camera_covered": {
+    "n": 22,
+    "positive_rate": 1.0
+   },
+   "object_only": {
+    "n": 22,
+    "positive_rate": 1.0
+   },
+   "empty_end": {
+    "n": 27,
+    "positive_rate": 1.0
+   }
+  },
+  "fusion_live": {
+   "empty_start": {
+    "n": 3,
+    "positive_rate": 0.0
+   },
+   "walk": {
+    "n": 3,
+    "positive_rate": 0.333
+   },
+   "stand": {
+    "n": 3,
+    "positive_rate": 0.333
+   },
+   "far": {
+    "n": 2,
+    "positive_rate": 0.0
+   },
+   "side": {
+    "n": 2,
+    "positive_rate": 0.5
+   },
+   "crouch": {
+    "n": 2,
+    "positive_rate": 0.0
+   },
+   "occluded": {
+    "n": 2,
+    "positive_rate": 0.0
+   },
+   "camera_covered": {
+    "n": 2,
+    "positive_rate": 0.0
+   },
+   "object_only": {
+    "n": 2,
+    "positive_rate": 0.0
+   },
+   "empty_end": {
+    "n": 3,
+    "positive_rate": 0.0
+   }
+  }
+ },
+ "fusion_profiles": {
+  "clear": {
+   "n": 51,
+   "tp": 5,
+   "fp": 3,
+   "fn": 31,
+   "tn": 12,
+   "precision": 0.625,
+   "recall": 0.139,
+   "f1": 0.227,
+   "specificity": 0.8,
+   "false_alert_rate": 0.2,
+   "accuracy": 0.333,
+   "weights": {
+    "camera": 0.7,
+    "radar": 0.3,
+    "ir": 0.0
+   },
+   "status": "PROVISIONAL_NOT_CALIBRATED",
+   "per_condition": {
+    "empty_start": {
+     "n": 6,
+     "positive_rate": 0.0
+    },
+    "walk": {
+     "n": 5,
+     "positive_rate": 0.2
+    },
+    "stand": {
+     "n": 6,
+     "positive_rate": 0.5
+    },
+    "far": {
+     "n": 5,
+     "positive_rate": 0.2
+    },
+    "side": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "crouch": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "occluded": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "camera_covered": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "object_only": {
+     "n": 4,
+     "positive_rate": 0.75
+    },
+    "empty_end": {
+     "n": 5,
+     "positive_rate": 0.0
+    }
+   },
+   "decision_changes": 9
+  },
+  "reduced_visibility": {
+   "n": 51,
+   "tp": 36,
+   "fp": 15,
+   "fn": 0,
+   "tn": 0,
+   "precision": 0.706,
+   "recall": 1.0,
+   "f1": 0.828,
+   "specificity": 0.0,
+   "false_alert_rate": 1.0,
+   "accuracy": 0.706,
+   "weights": {
+    "camera": 0.2,
+    "radar": 0.8,
+    "ir": 0.0
+   },
+   "status": "PROVISIONAL_NOT_CALIBRATED",
+   "per_condition": {
+    "empty_start": {
+     "n": 6,
+     "positive_rate": 1.0
+    },
+    "walk": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "stand": {
+     "n": 6,
+     "positive_rate": 1.0
+    },
+    "far": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "side": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "crouch": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "occluded": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "camera_covered": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "object_only": {
+     "n": 4,
+     "positive_rate": 1.0
+    },
+    "empty_end": {
+     "n": 5,
+     "positive_rate": 1.0
+    }
+   },
+   "decision_changes": 1
+  },
+  "fire_no_smoke": {
+   "n": 51,
+   "tp": 36,
+   "fp": 9,
+   "fn": 0,
+   "tn": 6,
+   "precision": 0.8,
+   "recall": 1.0,
+   "f1": 0.889,
+   "specificity": 0.4,
+   "false_alert_rate": 0.6,
+   "accuracy": 0.824,
+   "weights": {
+    "camera": 0.5556,
+    "radar": 0.4444,
+    "ir": 0.0
+   },
+   "status": "LITERATURE_PRIOR_UNCALIBRATED",
+   "per_condition": {
+    "empty_start": {
+     "n": 6,
+     "positive_rate": 0.0
+    },
+    "walk": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "stand": {
+     "n": 6,
+     "positive_rate": 1.0
+    },
+    "far": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "side": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "crouch": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "occluded": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "camera_covered": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "object_only": {
+     "n": 4,
+     "positive_rate": 1.0
+    },
+    "empty_end": {
+     "n": 5,
+     "positive_rate": 1.0
+    }
+   },
+   "decision_changes": 1
+  },
+  "fire_smoke": {
+   "n": 51,
+   "tp": 36,
+   "fp": 15,
+   "fn": 0,
+   "tn": 0,
+   "precision": 0.706,
+   "recall": 1.0,
+   "f1": 0.828,
+   "specificity": 0.0,
+   "false_alert_rate": 1.0,
+   "accuracy": 0.706,
+   "weights": {
+    "camera": 0.1111,
+    "radar": 0.8889,
+    "ir": 0.0
+   },
+   "status": "LITERATURE_PRIOR_UNCALIBRATED",
+   "per_condition": {
+    "empty_start": {
+     "n": 6,
+     "positive_rate": 1.0
+    },
+    "walk": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "stand": {
+     "n": 6,
+     "positive_rate": 1.0
+    },
+    "far": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "side": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "crouch": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "occluded": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "camera_covered": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "object_only": {
+     "n": 4,
+     "positive_rate": 1.0
+    },
+    "empty_end": {
+     "n": 5,
+     "positive_rate": 1.0
+    }
+   },
+   "decision_changes": 1
+  },
+  "flood": {
+   "n": 51,
+   "tp": 5,
+   "fp": 3,
+   "fn": 31,
+   "tn": 12,
+   "precision": 0.625,
+   "recall": 0.139,
+   "f1": 0.227,
+   "specificity": 0.8,
+   "false_alert_rate": 0.2,
+   "accuracy": 0.333,
+   "weights": {
+    "camera": 0.75,
+    "radar": 0.25,
+    "ir": 0.0
+   },
+   "status": "LITERATURE_PRIOR_UNCALIBRATED",
+   "per_condition": {
+    "empty_start": {
+     "n": 6,
+     "positive_rate": 0.0
+    },
+    "walk": {
+     "n": 5,
+     "positive_rate": 0.2
+    },
+    "stand": {
+     "n": 6,
+     "positive_rate": 0.5
+    },
+    "far": {
+     "n": 5,
+     "positive_rate": 0.2
+    },
+    "side": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "crouch": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "occluded": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "camera_covered": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "object_only": {
+     "n": 4,
+     "positive_rate": 0.75
+    },
+    "empty_end": {
+     "n": 5,
+     "positive_rate": 0.0
+    }
+   },
+   "decision_changes": 9
+  },
+  "earthquake": {
+   "n": 51,
+   "tp": 36,
+   "fp": 15,
+   "fn": 0,
+   "tn": 0,
+   "precision": 0.706,
+   "recall": 1.0,
+   "f1": 0.828,
+   "specificity": 0.0,
+   "false_alert_rate": 1.0,
+   "accuracy": 0.706,
+   "weights": {
+    "camera": 0.1579,
+    "radar": 0.8421,
+    "ir": 0.0
+   },
+   "status": "LITERATURE_PRIOR_UNCALIBRATED",
+   "per_condition": {
+    "empty_start": {
+     "n": 6,
+     "positive_rate": 1.0
+    },
+    "walk": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "stand": {
+     "n": 6,
+     "positive_rate": 1.0
+    },
+    "far": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "side": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "crouch": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "occluded": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "camera_covered": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "object_only": {
+     "n": 4,
+     "positive_rate": 1.0
+    },
+    "empty_end": {
+     "n": 5,
+     "positive_rate": 1.0
+    }
+   },
+   "decision_changes": 1
+  },
+  "camera_only": {
+   "n": 51,
+   "tp": 0,
+   "fp": 2,
+   "fn": 36,
+   "tn": 13,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0,
+   "specificity": 0.867,
+   "false_alert_rate": 0.133,
+   "accuracy": 0.255,
+   "weights": {
+    "camera": 1.0,
+    "radar": 0.0,
+    "ir": 0.0
+   },
+   "status": "BASELINE",
+   "per_condition": {
+    "empty_start": {
+     "n": 6,
+     "positive_rate": 0.0
+    },
+    "walk": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "stand": {
+     "n": 6,
+     "positive_rate": 0.0
+    },
+    "far": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "side": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "crouch": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "occluded": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "camera_covered": {
+     "n": 5,
+     "positive_rate": 0.0
+    },
+    "object_only": {
+     "n": 4,
+     "positive_rate": 0.5
+    },
+    "empty_end": {
+     "n": 5,
+     "positive_rate": 0.0
+    }
+   },
+   "decision_changes": 3
+  },
+  "radar_only": {
+   "n": 51,
+   "tp": 36,
+   "fp": 15,
+   "fn": 0,
+   "tn": 0,
+   "precision": 0.706,
+   "recall": 1.0,
+   "f1": 0.828,
+   "specificity": 0.0,
+   "false_alert_rate": 1.0,
+   "accuracy": 0.706,
+   "weights": {
+    "camera": 0.0,
+    "radar": 1.0,
+    "ir": 0.0
+   },
+   "status": "BASELINE",
+   "per_condition": {
+    "empty_start": {
+     "n": 6,
+     "positive_rate": 1.0
+    },
+    "walk": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "stand": {
+     "n": 6,
+     "positive_rate": 1.0
+    },
+    "far": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "side": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "crouch": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "occluded": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "camera_covered": {
+     "n": 5,
+     "positive_rate": 1.0
+    },
+    "object_only": {
+     "n": 4,
+     "positive_rate": 1.0
+    },
+    "empty_end": {
+     "n": 5,
+     "positive_rate": 1.0
+    }
+   },
+   "decision_changes": 1
+  }
+ },
+ "esp32_vs_laptop": {
+  "frames": 30,
+  "agreement": 0.833,
+  "cohens_kappa": 0.242
+ },
+ "delays_s": {
+  "esp32_tflm": {
+   "first_detection_after_entry": null,
+   "clear_after_exit_cue": 0.0
+  },
+  "laptop_yolox": {
+   "first_detection_after_entry": null,
+   "clear_after_exit_cue": 1.25
+  },
+  "radar": {
+   "first_detection_after_entry": 0.08,
+   "clear_after_exit_cue": 2.92
+  },
+  "fusion_live": {
+   "first_detection_after_entry": 0.67,
+   "clear_after_exit_cue": 0.0
+  },
+  "fusion_replay_clear": {
+   "first_detection_after_entry": 0.42,
+   "clear_after_exit_cue": 2.26
+  }
+ },
+ "latency_ms": {
+  "esp32_inference": {
+   "n": 37,
+   "p50": 58,
+   "p95": 59,
+   "max": 60
+  },
+  "esp32_preprocess": {
+   "n": 37,
+   "p50": 24,
+   "p95": 25,
+   "max": 25
+  },
+  "laptop_inference": {
+   "n": 37,
+   "p50": 20.6,
+   "p95": 43.1,
+   "max": 108.4
+  },
+  "node_fetch_incl_capture_inference_jpeg": {
+   "n": 37,
+   "p50": 343.0,
+   "p95": 516.0,
+   "max": 532.0
+  }
+ },
+ "throughput": {
+  "duration_s": 30.8,
+  "camera_fps": 1.17,
+  "radar_hz": 9.99,
+  "esp32_results_fraction": 1.0
+ },
+ "pipeline": {
+  "duration_s": 32.11,
+  "polls": 156,
+  "camera": {
+   "frames": 38,
+   "fps": 1.18,
+   "available_fraction": 1.0,
+   "receive_age_ms": {
+    "n": 156,
+    "p50": 438,
+    "p95": 782,
+    "max": 938
+   },
+   "fetch_duration_ms": {
+    "n": 38,
+    "p50": 328.0,
+    "p95": 516.0,
+    "max": 532.0
+   },
+   "node_rssi_dbm": {
+    "n": 38,
+    "p50": -41,
+    "p95": -35,
+    "max": -33
+   },
+   "node_reboots_seen": 0,
+   "outages": []
+  },
+  "detection": {
+   "frames_detected": 38,
+   "coverage_of_frames": 1.0,
+   "inference_ms": {
+    "n": 156,
+    "p50": 19.7,
+    "p95": 43.1,
+    "max": 108.4
+   },
+   "frames_with_person": 7
+  },
+  "fusion": {
+   "updates": 63,
+   "rate_hz": 1.96,
+   "decision_changes": 10
+  },
+  "radar": {
+   "reports": 319,
+   "rate_hz": 9.93,
+   "age_ms": {
+    "n": 156,
+    "p50": 62,
+    "p95": 109,
+    "max": 141
+   },
+   "outages": []
+  }
+ }
+}
