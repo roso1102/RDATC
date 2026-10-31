@@ -1,0 +1,66 @@
+{
+ "duration_s": 321.2,
+ "polls": 1567,
+ "camera": {
+  "frames": 342,
+  "fps": 1.06,
+  "available_fraction": 0.907,
+  "receive_age_ms": {
+   "n": 1422,
+   "p50": 438,
+   "p95": 812,
+   "max": 2828
+  },
+  "fetch_duration_ms": {
+   "n": 342,
+   "p50": 328.0,
+   "p95": 531.0,
+   "max": 907.0
+  },
+  "node_rssi_dbm": {
+   "n": 342,
+   "p50": -50,
+   "p95": -48,
+   "max": -44
+  },
+  "node_reboots_seen": 0,
+  "outages": [
+   {
+    "start_s": 128.531,
+    "statuses": [
+     "STALE",
+     "ERROR"
+    ],
+    "end_s": 158.187,
+    "duration_s": 29.66
+   }
+  ]
+ },
+ "detection": {
+  "frames_detected": 342,
+  "coverage_of_frames": 1.0,
+  "inference_ms": {
+   "n": 1422,
+   "p50": 18.8,
+   "p95": 30.4,
+   "max": 65.0
+  },
+  "frames_with_person": 185
+ },
+ "fusion": {
+  "updates": 640,
+  "rate_hz": 1.99,
+  "decision_changes": 22
+ },
+ "radar": {
+  "reports": 3210,
+  "rate_hz": 9.99,
+  "age_ms": {
+   "n": 1567,
+   "p50": 47,
+   "p95": 94,
+   "max": 203
+  },
+  "outages": []
+ }
+}
